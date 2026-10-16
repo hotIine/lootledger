@@ -1,0 +1,46 @@
+{
+  "name": "albion-loot-tracker",
+  "version": "0.1.0",
+  "description": "Reconciles ZvZ loot logs against guild chest logs",
+  "private": true,
+  "type": "module",
+  "main": "main.cjs",
+  "scripts": {
+    "start": "electron .",
+    "package": "npm run build-capture && electron-builder --win portable --x64",
+    "update-items": "node scripts/update-items.mjs",
+    "build-capture": "cd capture && GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -ldflags=\"-s -w -H windowsgui\" -o ../dist/capture/LootLedgerCapture.exe . && cp events.json ../dist/capture/"
+  },
+  "devDependencies": {
+    "@electron/packager": "^20.3.0",
+    "electron": "^44.7.0",
+    "electron-builder": "^26.15.3"
+  },
+  "build": {
+    "appId": "lootledger.desktop",
+    "productName": "LootLedger",
+    "files": [
+      "main.cjs",
+      "preload.cjs",
+      "src/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "dist/capture",
+        "to": "capture"
+      }
+    ],
+    "directories": {
+      "output": "dist/build"
+    },
+    "win": {
+      "target": "portable",
+      "icon": "build/icon.ico",
+      "signExecutable": false
+    },
+    "portable": {
+      "artifactName": "LootLedger.exe"
+    }
+  }
+}

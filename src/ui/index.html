@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https://render.albiononline.com; connect-src 'self' https://east.albion-online-data.com; style-src 'self' 'unsafe-inline'; script-src 'self'">
+  <title>Loot Ledger</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="appbar">
+    <h1>Loot Ledger</h1>
+    <p id="fight-info" class="fight-info"></p>
+  </header>
+
+  <section class="panel filters">
+    <h2>Filters</h2>
+    <div class="filter-row">
+      <details class="dropdown" data-filter="status"><summary></summary><div class="menu"></div></details>
+      <details class="dropdown" data-filter="tier"><summary></summary><div class="menu"></div></details>
+      <details class="dropdown" data-filter="type"><summary></summary><div class="menu"></div></details>
+      <details class="dropdown guild-dropdown" id="guild-dropdown">
+        <summary id="guild-summary">Guild: our side</summary>
+        <div id="guild-filter" class="menu"></div>
+      </details>
+    </div>
+    <div class="legend">
+      <span><i class="swatch owed"></i>Still owes</span>
+      <span><i class="swatch chest"></i>In the chest</span>
+      <span><i class="swatch died"></i>Died with</span>
+      <span><i class="swatch extra"></i>Not in loot logs</span>
+    </div>
+  </section>
+
+  <div class="panels">
+    <section class="panel">
+      <h2>Logs</h2>
+      <button type="button" class="green wide" id="toggle-logging" hidden>Start logging</button>
+      <p class="counts" id="logging-status"></p>
+      <textarea id="chest-text" rows="2" placeholder="Paste chest log here"></textarea>
+      <p class="counts" id="log-counts"></p>
+      <div class="button-row">
+        <button type="button" class="gold" id="add-chest">Add chest log</button>
+        <label class="button gold">Upload chest files<input type="file" id="chest-files" accept=".txt,.csv,.tsv" multiple hidden></label>
+      </div>
+      <label class="button orange wide">Add loot log files<input type="file" id="loot-files" accept=".csv,.txt" multiple hidden></label>
+      <ul class="file-list" id="file-list"></ul>
+    </section>
+
+    <section class="panel">
+      <h2>Fight</h2>
+      <label class="field">Count deposits from (UTC)
+        <input type="datetime-local" id="window-start" step="1">
+      </label>
+      <p class="counts" id="window-hint"></p>
+      <div class="button-row">
+        <button type="button" class="dark" id="save-session">Save fight</button>
+        <label class="button dark">Open saved fight<input type="file" id="open-session" accept=".json" hidden></label>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Actions</h2>
+      <button type="button" class="red wide" id="clear-chest">Delete chest logs</button>
+      <button type="button" class="red wide" id="new-session">Delete all logs</button>
+    </section>
+  </div>
+
+  <main id="results" class="results"></main>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
