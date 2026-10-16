@@ -2,7 +2,6 @@ import { createLiveLog, applyCaptureEvent, LOOT_LOG_HEADER } from '../core/liveL
 import { savePrices } from './prices.js';
 
 const MIN_REFRESH_MS = 2000;
-// lots of traffic but nothing recognised usually means a patch changed the codes
 const UNRECOGNISED_TRAFFIC = 1000;
 const OUTDATED_CAPTURE = 'Albion may have been updated; live logging needs an update.';
 const STATUS_EVENTS = new Set(['ready', 'error', 'stopped', 'self', 'traffic']);
@@ -81,7 +80,6 @@ export function setupLiveLogging({ itemListReady, prices, getSession, applyChang
       showStatus(status);
       const check = await window.ledger.checkCapture();
       status.needsNpcap = !check.isNpcapInstalled;
-      // wait for the fresh item list before naming rows
       if (!status.needsNpcap) status.itemWarning = await itemListReady;
       status.isStarting = false;
       if (status.needsNpcap) {

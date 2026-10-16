@@ -1,4 +1,3 @@
-// native title tooltips have a fixed delay
 const tooltip = document.createElement('div');
 tooltip.className = 'tooltip';
 tooltip.hidden = true;

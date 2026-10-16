@@ -1,4 +1,3 @@
-// Chest log dates are MM/DD/YYYY in UTC.
 import { itemKey } from './items.js';
 
 const DATE_PATTERN = /^(\d{1,2})\/(\d{1,2})\/(\d{4}) (\d{1,2}):(\d{2}):(\d{2})$/;
@@ -100,8 +99,6 @@ function flagPaste(pages, earlierRows) {
   return rows;
 }
 
-// Deposits made while copying push rows down, so a page can start with the
-// previous page's last rows.
 function overlap(previous, page) {
   for (let k = Math.min(previous.length, page.length); k > 0; k--) {
     const tail = previous.slice(-k);

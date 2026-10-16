@@ -12,7 +12,6 @@ import (
 	"time"
 )
 
-// recorder dumps every event, for remapping event codes after a patch.
 type recorder struct {
 	mu     sync.Mutex
 	out    *bufio.Writer
@@ -37,7 +36,6 @@ func runProbe(adapters []adapter) {
 	waitForStop(rec, file)
 }
 
-// param 252 holds the event code
 func (r *recorder) event(device string, params map[byte]interface{}) {
 	code := -1
 	if n, ok := toInt(params[252]); ok {
@@ -46,7 +44,6 @@ func (r *recorder) event(device string, params map[byte]interface{}) {
 	r.write("event", code, device, params)
 }
 
-// param 253 holds the operation code
 func (r *recorder) response(device string, opCode byte, params map[byte]interface{}) {
 	code, ok := toInt(params[253])
 	if !ok {

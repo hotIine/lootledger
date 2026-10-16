@@ -1,12 +1,8 @@
-// If gear from one loot burst gets deposited by 2+ other players, they took it
-// off the corpse, so the player died. Consumables are ignored since people
-// hand those around.
 import { itemType } from './items.js';
 import { deathTimeAfter } from './reconcile.js';
 
 const MIN_DEPOSITORS = 2;
 const MIN_ITEMS = 2;
-// tolerance for clock drift between loggers
 const REJECTION_MATCH_MS = 30 * 1000;
 
 export function inferDeaths(units, pickups, knownDeaths, rejectedIds) {

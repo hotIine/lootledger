@@ -1,13 +1,9 @@
-// { [itemId]: { [quality]: { value, time } } }
-
 export function notePrice(book, itemId, quality, value, time) {
   if (!itemId || !(value > 0)) return;
   book[itemId] ??= {};
   book[itemId][quality] = { value, time };
 }
 
-// Same as StatisticsAnalysis: min of 1-2 values, otherwise drop the high/low
-// and take the one closest to the mean.
 export function priceOf(book, itemId) {
   const values = Object.values(book[itemId] ?? {}).map((entry) => entry.value).sort((a, b) => a - b);
   if (values.length === 0) return 0;
@@ -17,7 +13,6 @@ export function priceOf(book, itemId) {
   return middle.reduce((best, v) => (Math.abs(v - average) < Math.abs(best - average) ? v : best));
 }
 
-// median of recent sell_price_min, skipping Black Market
 const MAX_LISTING_AGE = 30 * 24 * 3600e3;
 
 export function marketPrice(records, now) {

@@ -1,12 +1,6 @@
 import { itemType } from './items.js';
 import { countByPickup, unitRef } from './reconcile.js';
 
-// Matches leftover deposits (beyond the depositor's own pickups) to players who owe.
-// 1. Officer batches: 3+ distinct gear items lining up between A's debt and B's
-//    extra deposits get credited to B.
-// 2. Remaining spares settle everyone owing that item if there's enough, or a
-//    lone ower. Otherwise nobody is cleared.
-
 const STRONG_PAIR_ITEMS = 3;
 
 export function suggestTransfers(units, excess, dismissedIds = new Set()) {
@@ -133,6 +127,5 @@ function rankPairs(held, extra) {
       if (units > 0) pairs.push({ id: `${from}->${to}`, from, to, distinctItems, units });
     }
   }
-  // distinct gear is evidence, matching potions aren't
   return pairs.sort((a, b) => b.distinctItems - a.distinctItems || b.units - a.units || a.id.localeCompare(b.id));
 }

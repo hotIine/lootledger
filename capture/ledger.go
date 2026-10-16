@@ -9,14 +9,12 @@ import (
 	"time"
 )
 
-// Event/operation codes. These shift between patches; events.json overrides them.
 type gameCodes struct {
-	Loot     int `json:"loot"`
-	Death    int `json:"death"`
-	Player   int `json:"player"`
-	Join     int `json:"join"`
-	ChestLog int `json:"chestLog"`
-	// item details, which carry the estimated market value
+	Loot          int `json:"loot"`
+	Death         int `json:"death"`
+	Player        int `json:"player"`
+	Join          int `json:"join"`
+	ChestLog      int `json:"chestLog"`
 	ItemEquipment int `json:"itemEquipment"`
 	ItemSimple    int `json:"itemSimple"`
 }
@@ -30,14 +28,13 @@ func loadCodes() gameCodes {
 	return codes
 }
 
-// ledger turns game messages into JSON-line events on stdout.
 type ledger struct {
 	mu       sync.Mutex
 	out      *json.Encoder
 	codes    gameCodes
-	device   string         // adapter we locked onto
-	messages int            // decoded so far
-	values   map[[2]int]int // last value per item and quality
+	device   string
+	messages int
+	values   map[[2]int]int
 }
 
 func newLedger(out io.Writer) *ledger {
@@ -51,8 +48,6 @@ func (l *ledger) emit(event map[string]interface{}) {
 	l.out.Encode(event)
 }
 
-// accepts locks onto the first adapter that sees game traffic, so traffic
-// duplicated across adapters (e.g. VPN) isn't counted twice.
 func (l *ledger) accepts(device string) bool {
 	l.mu.Lock()
 	defer l.mu.Unlock()
@@ -62,8 +57,6 @@ func (l *ledger) accepts(device string) bool {
 	return l.device == device
 }
 
-// reportTraffic emits the decoded message count so the app can spot when
-// event codes stop matching after a patch.
 func (l *ledger) reportTraffic() {
 	l.mu.Lock()
 	count := l.messages
@@ -104,8 +97,6 @@ func (l *ledger) onEvent(device string, params map[byte]interface{}) {
 	}
 }
 
-// Values are fixed point (10,000 = 1 silver). Equipment quality shifts one param
-// when the crafter name is present. Only changed values are emitted.
 func (l *ledger) itemValue(params map[byte]interface{}, isEquipment bool) {
 	item, _ := toInt(params[1])
 	internal, _ := toInt(params[4])
@@ -135,7 +126,6 @@ func (l *ledger) isNewValue(item, quality, silver int) bool {
 	return true
 }
 
-// The join response carries the local player's details.
 func (l *ledger) onResponse(device string, opCode byte, params map[byte]interface{}) {
 	l.countMessage()
 	code, ok := toInt(params[253])
@@ -146,7 +136,6 @@ func (l *ledger) onResponse(device string, opCode byte, params map[byte]interfac
 		l.emit(map[string]interface{}{"type": "self", "name": text(params[2]), "guild": text(params[58]),
 			"alliance": text(params[79]), "map": text(params[8])})
 	}
-	// chest log format is still unknown, dump it raw
 	if code == l.codes.ChestLog && l.accepts(device) {
 		l.emit(map[string]interface{}{"type": "chest-log-raw", "params": simplify(params)})
 	}

@@ -1,7 +1,5 @@
 import bundledItems from './itemIndex.js';
 
-// Quality is ignored since the loot log doesn't record it.
-
 export function itemKey(name, enchant) {
   return `${name.trim().toLowerCase()}@${enchant}`;
 }
@@ -52,7 +50,6 @@ export function useItemList(list) {
   idsByName = buildIdsByName(list);
 }
 
-// some names are shared; prefer the tiered item over quest/unique copies
 function buildIdsByName(list) {
   const ids = new Map();
   for (const entry of list) {
@@ -71,8 +68,6 @@ export function itemAtIndex(index) {
   return entry ? { id: entry[0], name: entry[1] } : { id: `UNKNOWN_ITEM_${index}`, name: `Unknown item ${index}` };
 }
 
-// Chest rows only have names, so infer IDs (for icons) from loot rows,
-// falling back to the item list.
 export function buildItemIdLookup(pickups) {
   const byBase = new Map();
   for (const p of pickups) {

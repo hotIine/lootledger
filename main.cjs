@@ -19,7 +19,6 @@ function createWindow() {
   window.on('closed', () => app.quit());
 }
 
-// LOOT_LEDGER_CAPTURE overrides the capture exe (for testing without the game)
 function capturePath() {
   if (process.env.LOOT_LEDGER_CAPTURE) return process.env.LOOT_LEDGER_CAPTURE;
   const packaged = path.join(process.resourcesPath, 'capture', 'LootLedgerCapture.exe');
@@ -46,7 +45,6 @@ function startCapture() {
     else send(event);
   });
   capture.stderr.on('data', (data) => send({ type: 'error', message: data.toString().trim() }));
-  // 'exit' isn't guaranteed after 'error'
   capture.on('error', (error) => {
     capture = null;
     send({ type: 'error', message: `Could not start capture: ${error.message}` });
@@ -59,7 +57,6 @@ function startCapture() {
   });
 }
 
-// closing stdin asks it to quit
 function stopCapture() {
   if (!capture) return;
   const running = capture;
@@ -76,8 +73,6 @@ function saveChestLogSample(line) {
   fs.appendFileSync(path.join(logsFolder(), 'chest-log-samples.jsonl'), `${line}\n`);
 }
 
-// Renders a player card in a hidden window and copies it as an image.
-// The window is created once and reused since opening one is slow.
 const CARD_WIDTH = 680;
 let cardWindow = null;
 let cardQueue = Promise.resolve();
@@ -101,9 +96,6 @@ async function copyCard(html) {
   await clipboard.write([new ClipboardItem({ 'image/png': new Blob([png], { type: 'image/png' }) })]);
 }
 
-// capturePage() fails on offscreen windows, so grab a paint frame instead.
-// The first frame at the right size can be missing icons, so use the second.
-// Frames are in device pixels, so compare aspect ratio.
 function nextFrame(card, height) {
   return new Promise((resolve, reject) => {
     let framesAtSize = 0;
@@ -112,7 +104,6 @@ function nextFrame(card, height) {
       const { width, height: frameHeight } = image.getSize();
       if (Math.round((frameHeight * CARD_WIDTH) / width) !== height) return;
       framesAtSize += 1;
-      // invalidating during the paint gets merged into this frame
       if (framesAtSize === 1) { setTimeout(() => card.webContents.invalidate(), 20); return; }
       done();
       resolve(image);
@@ -130,8 +121,6 @@ ipcMain.handle('copy-card-image', (_event, html) => {
   return copy;
 });
 
-// Item indices shift between patches, so fetch the latest list on startup
-// and cache it for offline use.
 const ITEM_LIST_URL = 'https://raw.githubusercontent.com/ao-data/ao-bin-dumps/master/formatted/items.txt';
 let itemListLoad = null;
 
@@ -160,7 +149,6 @@ function readCachedItemList(cacheFile) {
 
 ipcMain.handle('item-list', () => itemListLoad);
 
-// Npcap installs to System32\Npcap (or System32 in WinPcap-compatible mode)
 function isNpcapInstalled() {
   const system32 = path.join(process.env.SystemRoot ?? 'C:\\Windows', 'System32');
   return ['Npcap\\wpcap.dll', 'wpcap.dll'].some((file) => fs.existsSync(path.join(system32, file)));
@@ -171,7 +159,6 @@ ipcMain.handle('open-npcap-download', () => shell.openExternal('https://npcap.co
 ipcMain.handle('capture-start', () => startCapture());
 ipcMain.handle('capture-stop', () => stopCapture());
 
-// only plain .csv names inside the logs dir
 ipcMain.handle('log-append', (_event, fileName, text) => {
   if (typeof text !== 'string' || !/^[\w.-]+\.csv$/.test(fileName)) throw new Error('Invalid log file name');
   fs.mkdirSync(logsFolder(), { recursive: true });
@@ -179,11 +166,8 @@ ipcMain.handle('log-append', (_event, fileName, text) => {
   return path.join(logsFolder(), fileName);
 });
 
-// pinned so packaging changes don't lose saved fights
 app.setPath('userData', path.join(app.getPath('appData'), 'albion-loot-tracker'));
 
-// The portable build unpacks to a shared temp dir, so a second instance
-// exiting would delete files out from under the first.
 if (!app.requestSingleInstanceLock()) {
   app.quit();
 } else {

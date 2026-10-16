@@ -1,13 +1,8 @@
-// Tracks every looted unit (a stack of 7 = 7 units) from pickup to where it
-// ends up. Looting a corpse drops everything that player held; deposits settle
-// what the depositor holds, and anything extra is kept for suggest.js.
-
 import { isTrash } from './items.js';
 
 const CORPSE_WINDOW_MS = 3 * 60 * 1000;
 const LOOTING_BURST_GAP_MS = 60 * 1000;
 const EVENT_ORDER = { death: 0, pickup: 1, deposit: 2 };
-// max clock offset between loggers
 const SAME_PICKUP_MS = 2 * 60 * 1000;
 
 export function reconcile({ pickups, deaths, deposits, isFriendly, actions = [] }) {
@@ -18,8 +13,6 @@ export function reconcile({ pickups, deaths, deposits, isFriendly, actions = [] 
   return { units: state.units, excess: state.excess.filter((e) => e.qty > 0), unapplied };
 }
 
-// Actions reference the pickup rather than a file line so they survive files
-// being removed or deduped.
 export function unitRef(unit) {
   return { pickup: { looter: unit.pickedBy, key: unit.key, from: unit.from, time: unit.time }, holder: unit.holder };
 }
@@ -77,12 +70,9 @@ function applyEvent(state, { type, e }) {
 function applyPickup(state, pickup) {
   if (pickup.from) lootCorpse(state, pickup);
   state.lastActive.set(pickup.looter, pickup.time);
-  // trash is never owed
   if (!isTrash(pickup.itemId)) createUnits(state, pickup);
 }
 
-// repeat loots of one corpse are one death, unless they've picked up since
-// (respawned) or the corpse would be gone
 function registerDeath(state, player, time, key) {
   const deathAt = state.deathAt.get(player);
   const isActiveSince = (state.lastActive.get(player) ?? -Infinity) > deathAt;
@@ -96,7 +86,6 @@ function registerDeath(state, player, time, key) {
   return time;
 }
 
-// old bag can still be looted after respawning
 function isOldBag(state, player, deathAt, key) {
   if (key === undefined) return false;
   const isLeftInBag = state.units.some((u) => u.status === 'dropped' && u.holder === player
@@ -124,7 +113,6 @@ function createUnits(state, pickup) {
   }
 }
 
-// assume the newest copies were deposited; older ones were more likely lost
 function applyDeposit(state, row) {
   const held = heldBy(state, row.player).filter((u) => u.key === row.key).reverse();
   const settled = take(held, row.amount);

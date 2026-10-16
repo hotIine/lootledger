@@ -1,9 +1,3 @@
-// Command capture passively reads Albion traffic (UDP 5056) through Npcap and
-// writes loot, death and player events to stdout as JSON lines. It exits when
-// stdin is closed.
-//
-// With -probe it writes every event to capture-test.jsonl instead, for
-// remapping event codes after a patch.
 package main
 
 import (
@@ -22,9 +16,7 @@ import (
 )
 
 const (
-	albionPort = 5056
-	// Windows coalesces packets before Npcap sees them, so this needs to be
-	// much larger than one packet (see albiondata-client).
+	albionPort         = 5056
 	snapLen            = 262144
 	trafficReportEvery = 30 * time.Second
 )
@@ -62,7 +54,6 @@ func main() {
 			l.reportTraffic()
 		}
 	}()
-	// the app closes stdin when it stops logging
 	io.Copy(io.Discard, bufio.NewReader(os.Stdin))
 }
 
@@ -89,7 +80,6 @@ func openAdapters() ([]adapter, error) {
 	return adapters, nil
 }
 
-// one parser per adapter, since fragments are reassembled per stream
 func listen(a adapter, onEvent eventHandler, onResponse responseHandler) {
 	parser := photon.NewPhotonParser(
 		func(byte, map[byte]interface{}) {},

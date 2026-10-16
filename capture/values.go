@@ -5,7 +5,6 @@ import (
 	"reflect"
 )
 
-// simplify converts decoded Photon values into something encoding/json can handle.
 func simplify(value interface{}) interface{} {
 	switch v := value.(type) {
 	case nil, bool, string, int8, int16, int32, int64, uint8, uint16, uint32, uint64, float32, float64, int:

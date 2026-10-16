@@ -25,7 +25,6 @@ function depositedText(g) {
     : `passed on by ${unit.pickedBy}, deposited by ${unit.holder}`;
 }
 
-// keep a half-typed reassign name across live redraws
 let drawnSelection = '';
 
 export function renderResults(result, session, view) {

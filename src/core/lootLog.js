@@ -66,7 +66,6 @@ function toDeath(row, id, time) {
   };
 }
 
-// 7 fractional digits, Date.parse only wants 3
 function parseUtc(value) {
   return Date.parse((value ?? '').replace(/(\.\d{3})\d+/, '$1'));
 }

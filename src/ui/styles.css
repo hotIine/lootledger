@@ -28,13 +28,11 @@ body {
   font: 13px/1.4 "Segoe UI", system-ui, sans-serif;
 }
 
-/* Header */
 .appbar { padding: 10px 4px 8px; }
 .appbar h1 { margin: 0; font-size: 20px; font-weight: 600; }
 .fight-info { margin: 2px 0 0; font-size: 12px; color: var(--muted); }
 .fight-info strong { color: var(--text); }
 
-/* Panels */
 .panel { background: var(--panel); border: 1px solid var(--panel-line); border-radius: 4px; padding: 12px 14px; }
 .panel h2 { margin: 0 0 10px; font-size: 15px; font-weight: 600; }
 .panels { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 10px 0 14px; }
@@ -43,7 +41,6 @@ body {
 .button-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
 .counts { margin: 6px 0 0; color: var(--muted); font-size: 12px; }
 
-/* Controls */
 button, .button {
   font: inherit; font-weight: 600; color: #fff;
   border: none; border-radius: 3px; padding: 7px 12px;
@@ -73,7 +70,6 @@ textarea, input[type="datetime-local"] { width: 100%; resize: vertical; }
 .field { display: block; color: var(--muted); }
 .field input { margin-top: 4px; }
 
-/* Filters */
 .filter-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
 .dropdown {
   position: relative;
@@ -84,7 +80,6 @@ textarea, input[type="datetime-local"] { width: 100%; resize: vertical; }
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .dropdown summary::-webkit-details-marker { display: none; }
 .dropdown summary:focus-visible { box-shadow: inset 0 0 0 1px var(--name); }
-/* custom arrow */
 .dropdown::after {
   content: ""; position: absolute; right: 14px; top: 15px; pointer-events: none;
   border: 5px solid transparent; border-top-color: var(--muted); border-bottom: 0;
@@ -108,12 +103,10 @@ textarea, input[type="datetime-local"] { width: 100%; resize: vertical; }
 .swatch.died { background: #4a4f57; }
 .swatch.extra { background: #286ec8; }
 
-/* Loaded files */
 .file-list { list-style: none; margin: 8px 0 0; padding: 0; font-size: 12px; }
 .file-list li { display: flex; align-items: center; gap: 8px; padding: 2px 0; }
 .file-list small { color: var(--muted); margin-left: auto; }
 
-/* Players */
 .notice { margin: 0 0 10px; color: var(--name); }
 .errors { margin: 0 0 10px; color: #e0a040; }
 .player { margin-bottom: 14px; }
@@ -161,7 +154,6 @@ textarea, input[type="datetime-local"] { width: 100%; resize: vertical; }
 }
 .tooltip::first-line { font-weight: 600; }
 
-/* Bottom sections */
 .bottom { margin-top: 12px; }
 .bottom summary { cursor: pointer; color: var(--muted); }
 .bottom ul { list-style: none; margin: 6px 0 0; padding: 0; }
@@ -173,7 +165,6 @@ textarea, input[type="datetime-local"] { width: 100%; resize: vertical; }
   .panels, .filter-row { grid-template-columns: 1fr; }
 }
 
-/* Copy as image */
 .player h3 .copy-card { margin-left: 12px; font-size: 12px; font-weight: 400; }
 body.card-page { padding: 12px; overflow: hidden; }
 .card-page .player { margin: 0; }

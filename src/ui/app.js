@@ -18,7 +18,6 @@ const valueOf = (itemId) => priceOf(prices, itemId) || marketPriceOf(itemId);
 let result = null;
 const view = { selected: '', notice: '', live: null, filters: { status: new Set(), tier: new Set(), type: new Set() } };
 
-// view changes only redraw; re-running analysis is slow on big fights
 function update(change, notice = '') {
   change();
   view.notice = notice;

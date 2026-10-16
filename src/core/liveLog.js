@@ -1,4 +1,3 @@
-// Converts capture events into StatisticsAnalysis-format loot rows.
 import { itemAtIndex } from './items.js';
 import { notePrice, priceOf } from './priceBook.js';
 import mapNames from './mapNames.js';
@@ -55,7 +54,6 @@ function deathRow(log, event) {
     event.killer, event.killerGuild || killer.guild, '', log.map, died.alliance, killer.alliance]);
 }
 
-// semicolons would break the csv
 function row(values) {
   return values.map((value) => String(value ?? '').replace(/;/g, ',')).join(';');
 }

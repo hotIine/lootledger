@@ -30,7 +30,6 @@ export function analyze(session, priceOf = () => 0) {
   ourSides.delete('');
   const shownGuilds = new Set(session.trackedGuilds ?? guildsOnSides(affiliations, ourSides));
   if (ourSides.size === 0) shownGuilds.forEach((guild) => ourSides.add(sideOfGuild(affiliations, guild)));
-  // live logs only learn guilds once a player is in view, so depositors count as ours
   const depositors = new Set(chest.deposits.map((row) => row.player));
   const ourPlayers = new Set(session.ourPlayers);
   const isFriendly = (name) => depositors.has(name) || ourPlayers.has(name) || ourSides.has(sideOf(name));
@@ -65,7 +64,6 @@ function settle({ pickups, deposits, isFriendly, rejected, actions }, deaths) {
   return { autoMatches, ...reconcileWith([...actions, ...autoMatches.flatMap(suggestionToActions)]) };
 }
 
-// older saves referenced a loot-file line instead of the pickup
 function upgradeActions(actions, pickups) {
   const byId = new Map(pickups.map((p) => [p.id, p]));
   return actions.map((action) => {

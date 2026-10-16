@@ -1,6 +1,3 @@
-// Duplicates are only collapsed across files, never within one: three identical
-// pickups in the same second are three items.
-
 const MATCH_WINDOW_MS = 3000;
 const OFFSET_SEARCH_MS = 120000;
 const DEATH_WINDOW_MS = 10000;
@@ -36,7 +33,6 @@ function groupBySignature(pickups) {
   return groups;
 }
 
-// median gap between matching events = clock skew between loggers
 function estimateClockOffset(base, incoming) {
   if (base.length === 0) return 0;
   const groups = groupBySignature(base);
